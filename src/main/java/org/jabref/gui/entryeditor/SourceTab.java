@@ -50,6 +50,9 @@ import org.jabref.model.database.BibDatabaseContext;
 import org.jabref.model.database.BibDatabaseMode;
 import org.jabref.model.entry.BibEntry;
 import org.jabref.model.entry.field.Field;
+import org.jabref.model.entry.field.StandardField;
+import org.jabref.model.entry.types.EntryType;
+import org.jabref.model.entry.types.StandardEntryType;
 import org.jabref.model.util.FileUpdateMonitor;
 
 import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
@@ -111,6 +114,16 @@ public class SourceTab extends EntryEditorTab {
         this.stateManager = stateManager;
         this.keyBindingRepository = keyBindingRepository;
 
+        //TODO implementação aqui
+        this.setOnSelectionChanged(e-> {
+            if (this.isSelected()) {
+                System.out.println("entrando trocando de aba");
+            } else {
+                createArticleCrossref(this.currentEntry);
+                System.out.println("saindo trocando de aba");
+            }
+        });
+
         stateManager.activeSearchQueryProperty().addListener((observable, oldValue, newValue) -> {
             searchHighlightPattern = newValue.flatMap(SearchQuery::getPatternForWords);
             highlightSearchPattern();
@@ -135,6 +148,23 @@ public class SourceTab extends EntryEditorTab {
         FieldWriter fieldWriter = FieldWriter.buildIgnoreHashes(fieldPreferences);
         new BibEntryWriter(fieldWriter, Globals.entryTypesManager).write(entry, bibWriter, type);
         return writer.toString();
+    }
+
+    /*
+    cria um crossref para uma entrada Article, extraindo os seguintes campos:
+        ssn
+        Publisher
+        Eissn
+        Journal
+        Address
+     */
+    private void createArticleCrossref( BibEntry article ){
+        BibEntry newCrossrefEntry = new BibEntry(StandardEntryType.Misc);
+        Field a = StandardField.ADDRESS;
+
+        newCrossrefEntry.setField(StandardField.ADDRESS, article.getField(StandardField.ADDRESS).get());
+        newCrossrefEntry.setField(StandardField.JOURNAL, article.getField(StandardField.JOURNAL).get());
+        System.out.println(newCrossrefEntry);
     }
 
     /* Work around for different input methods.
@@ -249,6 +279,8 @@ public class SourceTab extends EntryEditorTab {
         entry.typeProperty().addListener(listener -> updateCodeArea());
         entry.getFieldsObservable().addListener((InvalidationListener) listener -> updateCodeArea());
     }
+
+
 
     private void storeSource(BibEntry outOfFocusEntry, String text) {
         if ((outOfFocusEntry == null) || text.isEmpty()) {
