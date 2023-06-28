@@ -115,13 +115,6 @@ public class SourceTab extends EntryEditorTab {
         this.stateManager = stateManager;
         this.keyBindingRepository = keyBindingRepository;
 
-//        this.setOnSelectionChanged( e -> {
-//            if(!this.isSelected()){
-//                // enter here when other tab is selected
-//                createProceedingCrossref(this.currentEntry);
-//            }
-//        });
-
         stateManager.activeSearchQueryProperty().addListener((observable, oldValue, newValue) -> {
             searchHighlightPattern = newValue.flatMap(SearchQuery::getPatternForWords);
             highlightSearchPattern();
