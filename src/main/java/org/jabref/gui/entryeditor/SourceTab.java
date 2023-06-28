@@ -164,7 +164,6 @@ public class SourceTab extends EntryEditorTab {
             newBib.setField(StandardField.YEAR, inproceedings.getField(StandardField.YEAR).get());
         }
         if (inproceedings.getField(StandardField.BOOKTITLE).isPresent()){
-            tag = tag + inproceedings.getField(StandardField.BOOKTITLE).get();
             newBib.setField(StandardField.BOOKTITLE, inproceedings.getField(StandardField.BOOKTITLE).get());
         }
         if (inproceedings.getField(StandardField.TITLE).isPresent()){
