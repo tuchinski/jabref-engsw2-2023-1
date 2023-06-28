@@ -186,6 +186,53 @@ public class SourceTab extends EntryEditorTab {
         }
     }
 
+    void createArticleCrossref(BibEntry article){
+        BibEntry newBib = new BibEntry(StandardEntryType.Misc);
+
+        // if the inproceedings dont have any field, just return without creating proceedings
+        if(article == null || article.isEmpty()){
+            return;
+        }
+
+        String tag = "misc-";
+
+
+        if (article.getField(StandardField.ADDRESS).isPresent()){
+            newBib.setField(StandardField.ADDRESS, article.getField(StandardField.ADDRESS).get());
+        }
+        if (article.getField(new UnknownField("eissn")).isPresent()){
+            newBib.setField(new UnknownField("eissn"), article.getField(new UnknownField("eissn")).get());
+        }
+
+        if (article.getField(StandardField.PUBLISHER).isPresent()){
+            tag = tag + article.getField(StandardField.PUBLISHER).get();
+            newBib.setField(StandardField.PUBLISHER, article.getField(StandardField.PUBLISHER).get());
+        }
+        if (article.getField(StandardField.JOURNAL).isPresent()){
+            tag = tag + article.getField(StandardField.JOURNAL).get();
+            newBib.setField(StandardField.JOURNAL, article.getField(StandardField.JOURNAL).get());
+        }
+        if (article.getField(StandardField.ISSN).isPresent()){
+            newBib.setField(StandardField.ISSN, article.getField(StandardField.ISSN).get());
+        }
+
+
+
+        // if after all checks, the new entry doesnt have any field to extract, do not create a new entry
+        if(newBib.isEmpty()){
+            return;
+        }
+        BibDatabase database = this.stateManager.getActiveDatabase().get().getDatabase();
+
+        tag = tag.replace(" ", "_"); // remove the blank spaces in key name
+        // check if the new entry already exists
+        if(database.getNumberOfCitationKeyOccurrences(tag) == 0){
+            newBib.setField(InternalField.KEY_FIELD, tag);
+            database.insertEntry(newBib);
+            article.setField(StandardField.CROSSREF, tag);
+        }
+    }
+
     private void highlightSearchPattern() {
         if (searchHighlightPattern.isPresent() && (codeArea != null)) {
             codeArea.setStyleClass(0, codeArea.getLength(), "text");
@@ -277,6 +324,8 @@ public class SourceTab extends EntryEditorTab {
                 storeSource(currentEntry, codeArea.textProperty().getValue());
                 if(this.currentEntry.getType().equals(StandardEntryType.InProceedings)){
                     createProceedingCrossref(this.currentEntry);
+                } else if (this.currentEntry.getType().equals(StandardEntryType.Article)) {
+                    createArticleCrossref(this.currentEntry);
                 }
             }
 
