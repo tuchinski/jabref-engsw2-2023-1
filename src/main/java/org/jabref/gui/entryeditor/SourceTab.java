@@ -284,7 +284,6 @@ public class SourceTab extends EntryEditorTab {
                     createProceedingCrossref(this.currentEntry);
                 }
             }
-            // TODO: chamada precisa ser feita aqui, pq antes disso o valor não foi atualizado ainda
 
         });
         VirtualizedScrollPane<CodeArea> scrollableCodeArea = new VirtualizedScrollPane<>(codeArea);
