@@ -10,7 +10,7 @@ Note that this project **does not** adhere to [Semantic Versioning](http://semve
 ## [Unreleased]
 
 ### Added
-
+- We added a feature that automatically creates a proceeding entry when an inproceeding entry is created (the proceeding is created when the BiBTeX Source is edited)
 - We added a field showing the BibTeX/biblatex source for added and deleted entries in the "External Changes Resolver" dialog. [#9509](https://github.com/JabRef/jabref/issues/9509)
 - We added a search history list in the search field's right click menu. [#7906](https://github.com/JabRef/jabref/issues/7906)
 - We added a full text fetcher for IACR eprints. [#9651](https://github.com/JabRef/jabref/pull/9651)
