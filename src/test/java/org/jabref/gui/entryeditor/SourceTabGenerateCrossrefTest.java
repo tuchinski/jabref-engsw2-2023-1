@@ -60,7 +60,7 @@ public class SourceTabGenerateCrossrefTest {
     void testCreateCrossref(){
         BibEntry inproceedings = createInproceedingsWithUtilFields();
 
-        String keyCreatedProceeding = "proc-" + inproceedings.getField(StandardField.BOOKTITLE).get() + inproceedings.getField(StandardField.TITLE).get();
+        String keyCreatedProceeding = "proc-" + inproceedings.getField(StandardField.TITLE).get();
         keyCreatedProceeding = keyCreatedProceeding.replace(" ", "_");
 
         database.insertEntry(inproceedings);
@@ -82,7 +82,7 @@ public class SourceTabGenerateCrossrefTest {
     void testTryCreateProceedingWithDuplicateValue(){
         BibEntry inproceedings = createInproceedingsWithUtilFields();
 
-        String keyCreatedProceeding = "proc-" + inproceedings.getField(StandardField.BOOKTITLE).get() + inproceedings.getField(StandardField.TITLE).get();
+        String keyCreatedProceeding = "proc-" + inproceedings.getField(StandardField.TITLE).get();
         keyCreatedProceeding = keyCreatedProceeding.replace(" ", "_");
 
         BibEntry proceedings = createExpectedProceedings(keyCreatedProceeding);
