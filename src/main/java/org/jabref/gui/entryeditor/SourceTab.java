@@ -123,6 +123,7 @@ public class SourceTab extends EntryEditorTab {
 
     /**
      * Create a proceedings crossref to an inproceedings entry
+     *
      * the following fields are extracted:
      *         Address
      *         conference-year
@@ -134,11 +135,11 @@ public class SourceTab extends EntryEditorTab {
      *         title
      * @param inproceedings inproceedings entry to extract crossref
      */
-    private void createProceedingCrossref(BibEntry inproceedings){
+    protected void createProceedingCrossref(BibEntry inproceedings){
         BibEntry newBib = new BibEntry(StandardEntryType.Proceedings);
 
         // if the inproceedings dont have any field, just return without creating proceedings
-        if(inproceedings.isEmpty()){
+        if(inproceedings == null ||inproceedings.isEmpty()){
             return;
         }
 
@@ -170,18 +171,20 @@ public class SourceTab extends EntryEditorTab {
             tag = tag + inproceedings.getField(StandardField.TITLE).get();
             newBib.setField(StandardField.TITLE, inproceedings.getField(StandardField.TITLE).get());
         }
+
+        // if after all checks, the new entry doesnt have any field to extract, do not create a new entry
+        if(newBib.isEmpty()){
+            return;
+        }
         BibDatabase database = this.stateManager.getActiveDatabase().get().getDatabase();
 
-        tag = tag.replace(" ", "_");
+        tag = tag.replace(" ", "_"); // remove the blank spaces in key name
         // check if the new entry already exists
         if(database.getNumberOfCitationKeyOccurrences(tag) == 0){
             newBib.setField(InternalField.KEY_FIELD, tag);
             database.insertEntry(newBib);
             inproceedings.setField(StandardField.CROSSREF, tag);
         }
-
-
-
     }
 
     private void highlightSearchPattern() {
